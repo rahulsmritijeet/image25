@@ -17,8 +17,22 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
     { id: 'home', label: 'HOME' },
     { id: 'events', label: 'EVENTS'},
     { id: 'gallery', label: 'GALLERY'},
-    { id: 'reach-us', label: 'REACH US'}
+    { id: 'reach-us', label: 'REACH US'},
+    { 
+      id: 'brochure', 
+      label: 'BROCHURE', 
+      isExternal: true, 
+      link: 'https://drive.google.com/file/d/1xNYFjD7GS9jYJZaLhsOg5tD4IOrlLCyg/view?usp=drive_link'  // Replace with your actual brochure URL
+    }
   ];
+
+  const handleNavClick = (item) => {
+    if (item.isExternal) {
+      window.open(item.link, '_blank', 'noopener,noreferrer');
+    } else {
+      setCurrentPage(item.id);
+    }
+  };
 
   return (
     <>
@@ -33,11 +47,13 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
             {navItems.map((item) => (
               <button
                 key={item.id}
-                className={`nav-item ${currentPage === item.id ? 'active' : ''}`}
-                onClick={() => setCurrentPage(item.id)}
+                className={`nav-item ${!item.isExternal && currentPage === item.id ? 'active' : ''}`}
+                onClick={() => handleNavClick(item)}
               >
-                <span className="nav-icon">{item.icon}</span>
                 <span className="nav-label">{item.label}</span>
+                {item.isExternal && (
+                  <span className="external-icon" style={{ marginLeft: '5px', fontSize: '0.8rem' }}>↗</span>
+                )}
                 <span className="nav-indicator"></span>
               </button>
             ))}
@@ -61,13 +77,20 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
         {navItems.map((item) => (
           <button
             key={item.id}
-            className={`mobile-nav-item ${currentPage === item.id ? 'active' : ''}`}
+            className={`mobile-nav-item ${!item.isExternal && currentPage === item.id ? 'active' : ''}`}
             onClick={() => {
-              setCurrentPage(item.id);
+              if (item.isExternal) {
+                window.open(item.link, '_blank', 'noopener,noreferrer');
+              } else {
+                setCurrentPage(item.id);
+              }
               setIsMobileMenuOpen(false);
             }}
           >
             <span className="nav-label">{item.label}</span>
+            {item.isExternal && (
+              <span className="external-icon" style={{ marginLeft: '5px', fontSize: '0.8rem' }}>↗</span>
+            )}
           </button>
         ))}
       </div>
